@@ -167,7 +167,7 @@ public class Person extends Client {
 	}
 	
 	
-	 
+	
 	
 	
 	// 메인

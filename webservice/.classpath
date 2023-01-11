@@ -2,9 +2,39 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/precursor/Desktop/itim_jar/itim_common.jar"/>
-	<classpathentry kind="lib" path="C:/Users/precursor/Desktop/itim_jar/itim_ws_client.jar"/>
-	<classpathentry kind="lib" path="C:/Users/precursor/Desktop/itim_jar/itim_ws_model.jar"/>
-	<classpathentry kind="lib" path="C:/Users/precursor/Desktop/itim_jar/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="jar/axis-1.3.jar"/>
+	<classpathentry kind="lib" path="jar/com.sap.conn.jco.sapjco-3.0.15.jar"/>
+	<classpathentry kind="lib" path="jar/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="jar/commons-collections-3.2.jar"/>
+	<classpathentry kind="lib" path="jar/commons-configuration-1.2.jar"/>
+	<classpathentry kind="lib" path="jar/commons-discovery-0.2.jar"/>
+	<classpathentry kind="lib" path="jar/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="jar/commons-lang-2.3.jar"/>
+	<classpathentry kind="lib" path="jar/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="jar/commons-pool-1.5.3.jar"/>
+	<classpathentry kind="lib" path="jar/ezmorph-1.0.6.jar"/>
+	<classpathentry kind="lib" path="jar/itim_common.jar"/>
+	<classpathentry kind="lib" path="jar/itim_ws_client.jar"/>
+	<classpathentry kind="lib" path="jar/itim_ws_model.jar"/>
+	<classpathentry kind="lib" path="jar/ITIMWebServicesClientUtils-1.3.2.jar"/>
+	<classpathentry kind="lib" path="jar/itimWs.jar"/>
+	<classpathentry kind="lib" path="jar/jackson-annotations-2.1.1.jar"/>
+	<classpathentry kind="lib" path="jar/jackson-core-2.1.1.jar"/>
+	<classpathentry kind="lib" path="jar/jackson-databind-2.1.1.jar"/>
+	<classpathentry kind="lib" path="jar/javax.servlet-api-3.1.0.jar"/>
+	<classpathentry kind="lib" path="jar/jaxrpc-api-1.1.jar"/>
+	<classpathentry kind="lib" path="jar/jldap-4.3.jar"/>
+	<classpathentry kind="lib" path="jar/jsch-0.1.44.jar"/>
+	<classpathentry kind="lib" path="jar/json-lib-2.3-jdk13.jar"/>
+	<classpathentry kind="lib" path="jar/json-lib-2.3-jdk15.jar"/>
+	<classpathentry kind="lib" path="jar/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="jar/log4j-1.2.8.jar"/>
+	<classpathentry kind="lib" path="jar/log4j-core-2.5.jar"/>
+	<classpathentry kind="lib" path="jar/mail-1.4.jar"/>
+	<classpathentry kind="lib" path="jar/mybatis-3.0.6.jar"/>
+	<classpathentry kind="lib" path="jar/ojdbc7-12.1.0.2.jar"/>
+	<classpathentry kind="lib" path="jar/quartz-1.5.2.jar"/>
+	<classpathentry kind="lib" path="jar/sapjco3-3.0.0.jar"/>
+	<classpathentry kind="lib" path="jar/wsdl4j-1.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

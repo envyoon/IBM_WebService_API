@@ -232,7 +232,7 @@ public class Person extends Client {
 
 		try {
 			//person.createPerson(mpParams);
-			person.deletePerson(mpParams);// 해당 조건에 맞는 사람 삭제. 
+			//person.deletePerson(mpParams);// 해당 조건에 맞는 사람 삭제. 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

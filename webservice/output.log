@@ -177,3 +177,6 @@
 17:12:13,727 - INFO Client - else if url : https://11.11.11.214:9082/itim/services/WSSessionService/WEB-INF/wsdl/WSSessionService.wsdl
 17:12:13,731 - INFO Client - else if namespaceURI : http://services.ws.itim.ibm.com
 17:12:13,731 - INFO Client - else if serviceName : WSSessionService
+09:41:42,325 - INFO Client - else if url : https://11.11.11.214:9082/itim/services/WSSessionService/WEB-INF/wsdl/WSSessionService.wsdl
+09:41:42,330 - INFO Client - else if namespaceURI : http://services.ws.itim.ibm.com
+09:41:42,330 - INFO Client - else if serviceName : WSSessionService

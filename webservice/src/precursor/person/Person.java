@@ -42,6 +42,8 @@ import com.ibm.itim.ws.services.WSOrganizationalContainerService;
 import com.ibm.itim.ws.services.WSPersonService;
 import com.ibm.itim.ws.services.WSServiceService;
 import com.ibm.itim.ws.services.WSSessionService;
+
+//import examples.ws.Person;
 import precursor.client.Client;
 import precursor.client.Utils;
 
@@ -49,7 +51,8 @@ public class Person extends Client {
 
 	private static final String PARAM_JUSTIFICATION = "justification";
 	private static final String PARAM_ORG_CONTAINER = "orgContainer";
-
+	private static final String PARAM_PERSON_FILTER = "(preimkey=9999)";
+	
     static Logger m_logger = Logger.getLogger(Person.class.getSimpleName());
     
     
@@ -167,7 +170,43 @@ public class Person extends Client {
 	}
 	
 	
-	
+	// delete person
+	public boolean deletePerson(Map<String, Object> mpParams) throws Exception {
+		//Search for a person from root. Take the cn or sn filter criteria from the user 
+		String sFilterParam = (String)mpParams.get(PARAM_PERSON_FILTER);
+		System.out.println(sFilterParam); // 가져온 필터 값.
+		if(sFilterParam == null){
+			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "No Filter parameter passed to search for the person to be deleted.");
+			//String usage = this.getUsage("");
+			//System.out.println(usage);
+			return false;
+		}
+			
+		
+		//Call a searchPerson API to search for the person;
+		String principal = (String)mpParams.get(PARAM_ITIM_PRINCIPAL);
+		String credential = (String)mpParams.get(PARAM_ITIM_CREDENTIAL);
+		WSSession wsSession = loginIntoITIM(principal, credential);
+		WSPersonService personService = getPersonService();
+		XMLGregorianCalendar date = Utils.long2Gregorian(new Date().getTime());
+		String justification = (String)mpParams.get(PARAM_JUSTIFICATION);
+		List<WSPerson> lstWSPersons = personService.searchPersonsFromRoot(wsSession, sFilterParam, null);
+		if(lstWSPersons != null && lstWSPersons.size() > 0){
+			//This means we have a person which is to be deleted. If there are more than one person then we select the first one and delete it
+			WSPerson personToBeDeleted = lstWSPersons.get(0);
+			String personDN = personToBeDeleted.getItimDN();
+			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "Deleting the person " + personToBeDeleted.getName() + " having DN " + personToBeDeleted.getItimDN());
+			WSRequest wsRequest = personService.deletePerson(wsSession, personDN, date,justification);
+			Utils.printWSRequestDetails("delete person", wsRequest);
+			return true;
+		}else{
+			//Output a message which says that the no person found matching the filter criteria
+			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "No person found matching the filter : " + sFilterParam);
+			return false;
+		}
+		
+		
+	}
 	
 	
 	// 메인
@@ -180,6 +219,8 @@ public class Person extends Client {
 		mpParams.put(PARAM_ITIM_CREDENTIAL, "P@ssw0rd!");//SIM Console Login PWD
 		mpParams.put(PARAM_ORG_CONTAINER, "precursor");//Organization of Person
 		
+		mpParams.put(PARAM_PERSON_FILTER, "(preimkey=9999)"); // key값 중 9999를 가져와라.
+		
 //		mpParams.put("cn", "샘플 cn");//Person's CN
 //		mpParams.put("sn", "샘플입니다만 sn");//Person's SN
 //		mpParams.put("uid", "샘플이지요 uid");//Person's uid
@@ -188,12 +229,10 @@ public class Person extends Client {
 //		mpParams.put("preimstatus", "Y");//Person's status
 		
 		
-		
-		
-		
+
 		try {
 			//person.createPerson(mpParams);
-			//
+			person.deletePerson(mpParams);// 해당 조건에 맞는 사람 삭제. 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

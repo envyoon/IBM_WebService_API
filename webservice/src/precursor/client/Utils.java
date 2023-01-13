@@ -12,13 +12,25 @@
 
 package precursor.client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.ibm.itim.ws.model.WSAttribute;
 import com.ibm.itim.ws.model.WSRequest;
+import com.ibm.itim.ws.services.ArrayOfXsdString;
+
+//import examples.ws.Utils;
+
+//import examples.ws.ArrayOfXsdString;
+//import examples.ws.WSAttribute;
 
 public class Utils
 {
@@ -53,4 +65,9 @@ public class Utils
 
 		return dataTypeFactory.newXMLGregorianCalendar(gc);
 	}
+	
+	
+	
+	
+	
 }

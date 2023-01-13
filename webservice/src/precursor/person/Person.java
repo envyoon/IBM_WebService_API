@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -25,27 +24,25 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.log4j.Logger;
 
-import com.ibm.itim.dataservices.model.ObjectProfileCategory;
 import com.ibm.itim.ws.model.WSAttribute;
 import com.ibm.itim.ws.model.WSOrganizationalContainer;
 import com.ibm.itim.ws.model.WSPerson;
 import com.ibm.itim.ws.model.WSRequest;
-import com.ibm.itim.ws.model.WSService;
 import com.ibm.itim.ws.model.WSSession;
 import com.ibm.itim.ws.services.ArrayOfTns1WSAttribute;
 import com.ibm.itim.ws.services.ArrayOfXsdString;
-import com.ibm.itim.ws.services.DeletePerson;
-import com.ibm.itim.ws.services.WSApplicationException;
 import com.ibm.itim.ws.services.WSInvalidLoginException;
 import com.ibm.itim.ws.services.WSLoginServiceException;
 import com.ibm.itim.ws.services.WSOrganizationalContainerService;
 import com.ibm.itim.ws.services.WSPersonService;
-import com.ibm.itim.ws.services.WSServiceService;
 import com.ibm.itim.ws.services.WSSessionService;
 
 //import examples.ws.Person;
+//import examples.ws.Person;
+//import examples.ws.Person;
 import precursor.client.Client;
 import precursor.client.Utils;
+import precursor.client.Utils2;
 
 public class Person extends Client {
 
@@ -172,18 +169,18 @@ public class Person extends Client {
 	
 	// delete person
 	public boolean deletePerson(Map<String, Object> mpParams) throws Exception {
-		//Search for a person from root. Take the cn or sn filter criteria from the user 
+		//루트에서 person 검색함. 사용자로 부터 cn 또는 sn 필터 기준을 가져온다. 
 		String sFilterParam = (String)mpParams.get(PARAM_PERSON_FILTER);
 		System.out.println(sFilterParam); // 가져온 필터 값.
 		if(sFilterParam == null){
-			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "No Filter parameter passed to search for the person to be deleted.");
+			Utils.printMsg(Person.class.getName(), "deletePerson", "DELETEPERSON", "No Filter parameter passed to search for the person to be deleted.");
 			//String usage = this.getUsage("");
 			//System.out.println(usage);
 			return false;
 		}
 			
 		
-		//Call a searchPerson API to search for the person;
+		//searchPerson API를 호출하여 Person을 검색.
 		String principal = (String)mpParams.get(PARAM_ITIM_PRINCIPAL);
 		String credential = (String)mpParams.get(PARAM_ITIM_CREDENTIAL);
 		WSSession wsSession = loginIntoITIM(principal, credential);
@@ -192,21 +189,86 @@ public class Person extends Client {
 		String justification = (String)mpParams.get(PARAM_JUSTIFICATION);
 		List<WSPerson> lstWSPersons = personService.searchPersonsFromRoot(wsSession, sFilterParam, null);
 		if(lstWSPersons != null && lstWSPersons.size() > 0){
-			//This means we have a person which is to be deleted. If there are more than one person then we select the first one and delete it
+			//삭제해야 할 Person이 있다는 뜻입니다. Person이 두 명 이상인 경우 첫 번째 사람을 선택하고 삭제합니다
 			WSPerson personToBeDeleted = lstWSPersons.get(0);
 			String personDN = personToBeDeleted.getItimDN();
-			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "Deleting the person " + personToBeDeleted.getName() + " having DN " + personToBeDeleted.getItimDN());
+			Utils.printMsg(Person.class.getName(), "deletePerson", "DELETEPERSON", "Deleting the person " + personToBeDeleted.getName() + " having DN " + personToBeDeleted.getItimDN());
 			WSRequest wsRequest = personService.deletePerson(wsSession, personDN, date,justification);
 			Utils.printWSRequestDetails("delete person", wsRequest);
 			return true;
 		}else{
-			//Output a message which says that the no person found matching the filter criteria
-			Utils.printMsg(Person.class.getName(), "execute", "DELETEPERSON", "No person found matching the filter : " + sFilterParam);
+			//필터 기준과 일치하는 사람을 찾지 못했다는 메시지를 출력.
+			Utils.printMsg(Person.class.getName(), "deletePerson", "DELETEPERSON", "No person found matching the filter : " + sFilterParam);
 			return false;
 		}
 		
 		
 	}
+	
+	
+	
+	//modifyPerson
+	public boolean modifyPerson(Map<String, Object> mpParams) throws Exception{
+		//루트에서 person 검색함. 사용자로 부터 cn 또는 sn 필터 기준을 가져온다. 
+		String sFilterParam = (String)mpParams.get(PARAM_PERSON_FILTER);
+		System.out.println(sFilterParam); // 가져온 필터 출력
+		if(sFilterParam == null){
+			Utils2.printMsg(Person.class.getName(), "modifyPerson", "MODIFYPERSON", "삭제할 사람을 검색하기 위해 필터 매개변수가 전달되지 않았습니다.");
+			//String usage = this.getUsage("");
+			//System.out.println(usage);
+			return false;
+		}
+			
+		
+		//searchPerson API를 호출하여 사람을 검색.
+		String principal = (String)mpParams.get(PARAM_ITIM_PRINCIPAL);
+		String credential = (String)mpParams.get(PARAM_ITIM_CREDENTIAL);
+		WSSession wsSession = loginIntoITIM(principal, credential);
+		WSPersonService personService = getPersonService();
+		XMLGregorianCalendar date = Utils2.long2Gregorian(new Date().getTime());
+		
+		System.out.println("modifyPerson date : "+date);
+		
+		String justification = (String)mpParams.get(PARAM_JUSTIFICATION);
+		List<WSPerson> lstWSPersons = personService.searchPersonsFromRoot(wsSession, sFilterParam, null);
+		if(lstWSPersons != null && lstWSPersons.size() > 0){
+			//이 내용은 수정해야 할 사람이 있다 라는 뜻 
+			//사람이 두 명 이상인 경우 첫 번째 사람을 선택하고 수정한다.
+			WSPerson person = lstWSPersons.get(0);
+			String personDN = person.getItimDN();
+			
+			System.out.println("modifyPerson personDN : " +personDN);
+			
+			Utils2.printMsg(Person.class.getName(), "modifyPerson", "MODIFYPERSON", "Modifying person  " + person.getName());
+			//수정할 person attributes를 전달할 수 있도록 Map mpParams에서 불필요한 속성을 제거한다.
+			mpParams.remove(OPERATION_NAME);
+			mpParams.remove(PARAM_ITIM_PRINCIPAL);
+			mpParams.remove(PARAM_ITIM_CREDENTIAL);
+			mpParams.remove(PARAM_PERSON_FILTER);
+			
+			List<WSAttribute> lstWSAttributes = Utils2.getWSAttributesList(mpParams,"MODIFYPERSON");
+			
+//			System.out.println("modifyPerson lstWSAttributes : " + lstWSAttributes.get(0).getName());
+//			System.out.println("modifyPerson lstWSAttributes : " + lstWSAttributes.get(1).getName());
+			
+			if(lstWSAttributes != null && lstWSAttributes.size() > 0){
+				WSRequest wsRequest = personService.modifyPerson(wsSession, personDN, lstWSAttributes, date, null);
+				Utils2.printWSRequestDetails("modify person", wsRequest);
+			}else{
+				Utils2.printMsg(Person.class.getName(), "modifyPerson", "MODIFYPERSON", "No modify parameters passed to the modifyPerson operation.");
+				//Utils.printMsg(Person.class.getName(), "modifyPerson", "MODIFYPERSON", "\n" + this.getUsage(""));
+			}
+			
+			
+			return true;
+		}else{
+			//Output a message which says that the no person found matching the filter criteria
+			Utils2.printMsg(Person.class.getName(), "modifyPerson", "MODIFYPERSON", "No person found matching the filter : " + sFilterParam);
+			return false;
+		}
+	}
+	
+
 	
 	
 	// 메인
@@ -217,7 +279,7 @@ public class Person extends Client {
 
 		mpParams.put(PARAM_ITIM_PRINCIPAL, "itim manager");//SIM Console Login ID
 		mpParams.put(PARAM_ITIM_CREDENTIAL, "P@ssw0rd!");//SIM Console Login PWD
-		mpParams.put(PARAM_ORG_CONTAINER, "precursor");//Organization of Person
+//		mpParams.put(PARAM_ORG_CONTAINER, "precursor");//Organization of Person
 		
 		mpParams.put(PARAM_PERSON_FILTER, "(preimkey=9999)"); // key값 중 9999를 가져와라.
 		
@@ -228,11 +290,16 @@ public class Person extends Client {
 //		mpParams.put("preimflag", "Y");//Person's flag
 //		mpParams.put("preimstatus", "Y");//Person's status
 		
+		mpParams.put("preimusernamekr", "이름이름");
+		
+		
 		
 
 		try {
 			//person.createPerson(mpParams);
-			//person.deletePerson(mpParams);// 해당 조건에 맞는 사람 삭제. 
+			//person.deletePerson(mpParams);// 해당 조건에 맞는 사람 삭제.
+			person.modifyPerson(mpParams);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
